@@ -10,6 +10,7 @@ const rotations = data.split(/\s+/).filter((line) => !!line);
 // The dial starts by pointing at 50
 let position = 50;
 let endingZeros = 0;
+let crossingZeros = 0;
 
 for (const rotation of rotations) {
   const dir = rotation[0];
@@ -17,10 +18,20 @@ for (const rotation of rotations) {
 
   switch (dir) {
     case 'L':
-      position -= dist;
+      for (let i = 0; i < dist; i++) {
+        position -= 1;
+        if (position % 100 === 0) {
+          crossingZeros += 1;
+        }
+      }
       break;
     case 'R':
-      position += dist;
+      for (let i = 0; i < dist; i++) {
+        position += 1;
+        if (position % 100 === 0) {
+          crossingZeros += 1;
+        }
+      }
       break;
     default:
       throw new Error(`Invalid direction: ${dir}`);
@@ -35,4 +46,5 @@ for (const rotation of rotations) {
 }
 
 console.log(`Final position: ${position}`);
-console.log(`Number of times dial stopped at zero: ${endingZeros}`);
+console.log(`Number of times dial stopped at zero: ${endingZeros}`); // 1092
+console.log(`Number of times dial crossed zero: ${crossingZeros}`); // 6616
