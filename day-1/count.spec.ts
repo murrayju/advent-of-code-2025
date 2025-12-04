@@ -17,7 +17,7 @@ describe('count crossings', () => {
     { r: ['R161'], c: 2, p: 1 },
   ])('from 40, rotations: $r results in $c crossings', ({ r, c, p }) => {
     const { crossedZeroCount, finalPosition } = count(40, r);
-    expect(finalPosition).toEqual(p)
+    expect(finalPosition).toEqual(p);
     expect(crossedZeroCount).toEqual(c);
   });
 
@@ -38,7 +38,7 @@ describe('count crossings', () => {
     { r: ['R201'], c: 2, p: 1 },
   ])('from 0, rotations: $r results in $c crossings', ({ r, c, p }) => {
     const { crossedZeroCount, finalPosition } = count(0, r);
-    expect(finalPosition).toEqual(p)
+    expect(finalPosition).toEqual(p);
     expect(crossedZeroCount).toEqual(c);
   });
 });
