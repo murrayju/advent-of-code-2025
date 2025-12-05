@@ -1,4 +1,4 @@
 #!/bin/bash
 
-./bun install
+./bun install --no-summary
 exec ./bun run "$@"
