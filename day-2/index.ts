@@ -60,6 +60,7 @@ const part1 = () => {
 
 const part2 = () => {
   const invalidIds = new Set<number>();
+  const testedIds = new Set<number>();
   let iterations = 0;
   for (const [start, end] of ranges) {
     if (!start || !end || start > end) {
@@ -68,23 +69,32 @@ const part2 = () => {
 
     let i = start;
     while (i <= end) {
+      testedIds.add(i);
       const numStr = i.toString();
       const numDigits = numStr.length;
+      let next = 10 ** numDigits;
       for (let pLen = 1; pLen <= numDigits / 2; pLen += 1) {
         if (numDigits % pLen) continue; // pattern can't fit evenly
         iterations += 1;
         const pat = numStr.slice(0, pLen);
         const candidate = parseInt(pat.repeat(numDigits / pLen), 10);
-        if (candidate === i) {
-          invalidIds.add(i);
+        if (candidate >= i && candidate <= end) {
+          invalidIds.add(candidate);
+        }
+        const nextIncrement = parseInt(
+          `${parseInt(pat, 10) + 1}`.repeat(numDigits / pLen),
+          10,
+        );
+        if (!testedIds.has(nextIncrement)) {
+          next = Math.min(next, nextIncrement);
         }
       }
-      i += 1;
+      i = Math.max(next, i + 1);
     }
   }
 
   console.log('\n---- Part 2 ----');
-  console.log(`iterations: ${iterations}`); // 4960087
+  console.log(`iterations: ${iterations}`); // 4960087 -> 2274
   console.log(`Number of invalid IDs: ${invalidIds.size}`); // 842
   const sum = Array.from(invalidIds).reduce((acc, curr) => acc + curr, 0);
   console.log(`Sum of invalid IDs (answer): ${sum}`); // 22617871034
