@@ -32,7 +32,7 @@ const sortedRanges: [number, number][] = upper
 
 let last = sortedRanges[0];
 if (!last) throw new Error('Empty list of ranges');
-const compressedRanges: [number, number][] = [last];
+const ranges: [number, number][] = [last];
 
 for (const range of sortedRanges) {
   const [left, right] = range;
@@ -40,7 +40,7 @@ for (const range of sortedRanges) {
     last[1] = Math.max(last[1], right);
   } else {
     last = range;
-    compressedRanges.push(range);
+    ranges.push(range);
   }
 }
 
@@ -50,7 +50,7 @@ const available = lower
   .map((val) => parseInt(val, 10));
 
 console.log(
-  `${sortedRanges.length} ranges (${compressedRanges.length} compressed), ${available.length} available`,
+  `${sortedRanges.length} ranges (${ranges.length} compressed), ${available.length} available`,
 ); // 187 (91), 1000
 
 console.log('\n---- Part 1 ----');
@@ -58,14 +58,30 @@ console.log('\n---- Part 1 ----');
 let iterations = 0;
 let fresh = 0;
 for (const ingredient of available) {
-  for (const [left, right] of compressedRanges) {
+  let low = 0;
+  let high = ranges.length - 1;
+  while (low <= high) {
     iterations++;
+    const pos = Math.floor((low + high) / 2);
+    const range = ranges[pos];
+    if (!range) break;
+
+    const [left, right] = range;
     if (ingredient >= left && ingredient <= right) {
+      // found
       fresh++;
+      break;
+    }
+    if (ingredient < left) {
+      high = pos - 1;
+    } else if (ingredient > right) {
+      low = pos + 1;
+    } else {
+      // not found
       break;
     }
   }
 }
 
-console.log('iterations:', iterations); // 131238 -> 64498 (compressed)
+console.log('iterations:', iterations); // 131238 -> 64498 (compressed) -> 6056 (binary search)
 console.log('Fresh ingredients (answer):', fresh); // 558
